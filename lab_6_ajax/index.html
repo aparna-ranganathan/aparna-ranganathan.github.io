@@ -16,12 +16,25 @@
     </div>
   </div>
   <script>
+    
     function loadData() {
       fetch('ajax_sample.json')
         .then(res => res.json())
-        .then(res => res.map(c => c.name))
-        .then(codes => document.querySelector(".content").innerText = codes);
-    }
+        .then(json => {
+          var countries = "";
+          var names = json.map(j => j.name)
+          var codes = json.map(j => j.code)
+          for (let i=0; i<15; i+=1 ){
+            var selectNumber = Math.floor(Math.random()*(242+1));
+            if (!countries.includes(names[selectNumber])){
+            countries+= "<li>" + (names[selectNumber]) + " (" + (codes[selectNumber]) + 
+            ")" + "</li>";
+          } else {
+            i-=1;
+          }}
+          return countries;})
+          .then(names => document.querySelector(".content").innerHTML = "<ol>" + names + "</ol>");
+}
   </script>
 </body>
 

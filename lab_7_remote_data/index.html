@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Test AJAX page</title>
+    <link rel="stylesheet" type="text/css" href="./lab_styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <div class="header">UMD Bus Routes</div>
+        <button class="button" onclick="loadData()">Load Some JSON</button>
+        <div class="content"></div>
+        <div class="footer"></div>
+      </div>
+    </div>
+    <script>
+      function loadData() {
+        fetch("https://api.umd.io/v0/bus/routes")
+          .then(res => res.json())
+          .then(res => {
+            var busroutes = "";
+            var names = res.map(j => j.title);
+            var codes = res.map(j => j.route_id);
+
+            for (let i = 0; i < names.length; i++) {
+              if (names[i].includes(codes[i])) {
+                names[i] = names[i].substring(4);
+              }
+              busroutes += "<li>" + names[i] + " (" + codes[i] + ")" + "</li>";
+            }
+            document.querySelector(".content").innerHTML = busroutes;
+            return res;
+          })
+          // .then(names => document.querySelector(".content").innerHTML =  names);
+          .then(names => {
+            var result = names.find(i => i.title === "122 Green");
+            //  const result = busroutes.find( ({ names }) => names === '122 Green' );
+            // var resultName = names.find(function(element) {
+            //   return element === "122 Green";
+            // });
+            // var resultCode = codes.find(function(element) {
+            //   return element === "122";
+            // });
+            document.querySelector(".header").innerHTML =
+              // "UMD Bus Routes " + resultName + " " + resultCode;
+              "UMD Bus Routes " + result.route_id + " " + result.title.substring(4);
+          });
+      }
+    </script>
+  </body>
+</html>
